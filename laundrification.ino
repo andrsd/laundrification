@@ -17,6 +17,7 @@ int status = WL_IDLE_STATUS;
 char server[] = "maker.ifttt.com";
 char WASHING_MACHINE_DONE[] = "washing_machine_done";
 
+const unsigned int PHOTOCELL_THRESHOLD = 512;
 const unsigned int PHOTOCELL_PIN = 0;
 
 int washing_machine_status = 0;
@@ -85,13 +86,13 @@ bool triggerMakerEvent(const char * event) {
 
 void loop() {
   int photocellReading = analogRead(PHOTOCELL_PIN);
-  if (photocellReading > 512 && washing_machine_status == 0) {
+  if (photocellReading > PHOTOCELL_THRESHOLD && washing_machine_status == 0) {
     // washing machine LED turned on
     washing_machine_status = 1;
     send_notification = 1;
   }
 
-  if (send_notification == 2 && photocellReading <= 512 && washing_machine_status == 1) {
+  if (send_notification == 2 && photocellReading <= PHOTOCELL_THRESHOLD && washing_machine_status == 1) {
     // washing machine LED turned off
     washing_machine_status = 0;
     send_notification = 0;
